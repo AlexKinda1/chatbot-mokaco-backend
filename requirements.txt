@@ -1,0 +1,19 @@
+# requirements.txt
+
+# Framework de base pour le RAG
+langchain
+langchain-community
+
+# Pour lire les PDFs
+pypdf
+
+# Le modèle d'Embeddings (pour vectoriser le texte)
+# On utilise un modèle open-source performant
+sentence-transformers
+langchain-huggingface
+
+# Notre base de données vectorielle locale
+chromadb
+
+# Utile pour gérer les variables d'environnement (clés API, etc.)
+python-dotenv

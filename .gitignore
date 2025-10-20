@@ -1,0 +1,36 @@
+# Fichier .gitignore pour le projet Chatbot Mokaco
+
+# --- Environnement virtuel Python ---
+# Ne jamais commiter les librairies installées
+venv/
+*.local
+.env
+
+# --- Données ---
+# Ignorer TOUTES les données brutes (PDFs, CSVs, etc.)
+# C'est la propriété intellectuelle de Mokaco.
+data/raw/
+
+# Ignorer TOUTE la base de données vectorielle générée
+# Elle sera créée localement par le script ingest.py
+data/vector_db/
+
+# (Note: nous laissons le dossier 'data/processed/' au cas où
+# nous aurions de petits fichiers de mapping JSON que nous voudrions versionner)
+
+# --- Fichiers de tickets (au cas où) ---
+*.csv
+*.xlsx
+
+# --- Cache et logs Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.log
+
+# --- Fichiers IDE (optionnel mais propre) ---
+.vscode/
+.idea/
+*.DS_Store
