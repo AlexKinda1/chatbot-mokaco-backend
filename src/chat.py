@@ -48,7 +48,7 @@ def main():
         embedding_function=embeddings
     )
 
-    # --- 4. Initialiser le Retriever (Le "Chercheur") ---
+    # --- 4. Initialiser le Retriever (Le "Chercheur") --
 
     retriever = vector_store.as_retriever(search_kwargs={"k": 4})
     logging.info("Retriever initialisé (k=4 chunks).")
