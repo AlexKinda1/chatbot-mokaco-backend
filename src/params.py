@@ -24,3 +24,6 @@ TEMPERATURE=
 CHUNK_SIZE=
 CHUNK_OVERSIZE=
 
+#Autres parametres
+
+
