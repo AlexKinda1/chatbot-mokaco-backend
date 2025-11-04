@@ -9,6 +9,8 @@ def qa():
                                            memory=memory,
                                            get_chat_history=lambda h :h,
                                            return_source_documents=False)
+    
+    
     while True:
 
         query = input("Question:")
