@@ -3,6 +3,7 @@ def qa():
     history=[]
     
     memory=ConversationBufferMemory(memory_key="chat_history", return_messages=False)
+    
     qa=ConversationalRetrievalChain.from_llm(
                                            llm=llm_model,
                                            retriever=docsearch.as_retriever(),
