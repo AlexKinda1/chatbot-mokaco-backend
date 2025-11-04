@@ -23,4 +23,6 @@ def qa():
 
         print("Answer:", result["answer"])
 
+
+
 qa()
