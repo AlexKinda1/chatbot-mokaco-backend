@@ -22,7 +22,5 @@ def qa():
         history.append((query, result["answer"]))
 
         print("Answer:", result["answer"])
-
-
-
+        
 qa()
