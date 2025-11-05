@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # --- CONFIGURATION DES CHEMINS ---
-# Chemin vers les données brutes
+
 RAW_DATA_PATH = "data/raw"
 MANUALS_PATH = os.path.join(RAW_DATA_PATH, "manuals")
 FAQ_PATH = os.path.join(RAW_DATA_PATH, "faq")
