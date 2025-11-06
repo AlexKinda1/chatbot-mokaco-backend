@@ -24,12 +24,6 @@ PERSIST_DIRECTORY = "data/vector_db"
 # On choisit un modèle d'embedding performant et multilingue (au cas où)
 # "all-MiniLM-L6-v2" est rapide et léger.
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-
-# --- CONFIGURATION DU DÉCOUPEUR DE TEXTE ---
-# Ces valeurs sont cruciales pour le RAG.
-# chunk_size: La taille maximale de nos morceaux de texte (en caractères).
-# chunk_overlap: Le nombre de caractères de chevauchement entre deux morceaux
-#                pour ne pas perdre le contexte lors de la coupe.
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 
@@ -58,6 +52,7 @@ def split_documents(documents):
     Découpe les documents chargés en petits "chunks".
     """
     logging.info("Démarrage du découpage des documents...")
+    
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
@@ -65,6 +60,7 @@ def split_documents(documents):
     )
     chunks = text_splitter.split_documents(documents)
     logging.info(f"Nombre total de 'chunks' créés : {len(chunks)}")
+    
     return chunks
 
 def initialize_embeddings():
