@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctimes)s')
 RAW_DATA_PATH = "data/raw"
 MANUALS_PATH = os.path.join(RAW_DATA_PATH, "manuals")
 FAQ_PATH = os.path.join(RAW_DATA_PATH, "faq")
+VECTOR_STORE_PATH = "data/vector_db"
 
 #Base de donnée vectorielle
 PERSIST_DIRECTORY = "data/vector_db"
