@@ -1,4 +1,7 @@
-docsearch = vector
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
+
+
 def qa():
     history=[]
     
