@@ -11,6 +11,8 @@ chromadb>=0.5.0
 # Pydantic (la V2, pour satisfaire tout le monde)
 pydantic>=2.7.0
 
+
+
 # Le reste
 pypdf
 sentence-transformers
