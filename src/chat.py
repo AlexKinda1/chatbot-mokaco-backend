@@ -7,6 +7,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
 
 
 logging.basicConfig(
