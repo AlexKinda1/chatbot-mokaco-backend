@@ -21,24 +21,20 @@ FAQ_PATH = os.path.join(RAW_DATA_PATH, "faq")
 PERSIST_DIRECTORY = "data/vector_db"
 
 # --- CONFIGURATION DU MODÈLE D'EMBEDDING ---
-# On choisit un modèle d'embedding performant et multilingue (au cas où)
-# "all-MiniLM-L6-v2" est rapide et léger.
+
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
 
 def load_documents_from_path(directory_path, doc_type):
-    """
-    Charge tous les PDF d'un dossier et ajoute un "type" dans les métadonnées.
-    """
+    
     logging.info(f"Chargement des documents depuis : {directory_path} (Type: {doc_type})")
     # PyPDFDirectoryLoader charge tous les PDF d'un coup
+    
     loader = PyPDFDirectoryLoader(directory_path)
     documents = loader.load()
     
-    # C'est une étape CLÉ : nous "tagguons" chaque document
-    # avec sa source (manual vs faq).
-    # Cela permettra au bot de filtrer ses recherches.
     for doc in documents:
         doc.metadata["doc_type"] = doc_type
         # On nettoie le nom du fichier pour le garder en référence
@@ -48,9 +44,7 @@ def load_documents_from_path(directory_path, doc_type):
     return documents
 
 def split_documents(documents):
-    """
-    Découpe les documents chargés en petits "chunks".
-    """
+    
     logging.info("Démarrage du découpage des documents...")
     
     text_splitter = RecursiveCharacterTextSplitter(
@@ -58,19 +52,21 @@ def split_documents(documents):
         chunk_overlap=CHUNK_OVERLAP,
         length_function=len
     )
+    
     chunks = text_splitter.split_documents(documents)
+    
     logging.info(f"Nombre total de 'chunks' créés : {len(chunks)}")
     
     return chunks
 
+
+#--- INITIALISATION DU MODÈLE D'EMBEDDING ---: Pas vraiment necessaire faire une fonction mais pour la clarté du code
 def initialize_embeddings():
-    """
-    Initialise le modèle d'embedding depuis HuggingFace.
-    """
+    
     logging.info(f"Initialisation du modèle d'embedding : {EMBEDDING_MODEL_NAME}")
-    # On spécifie 'cpu' car l'embedding n'a pas besoin d'un gros GPU
+    
     model_kwargs = {'device': 'cpu'}
-    encode_kwargs = {'normalize_embeddings': False}
+    encode_kwargs = {'normalize_embeddings': False}  #Tester plus tard avec True
     
     embeddings = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL_NAME,
@@ -80,10 +76,6 @@ def initialize_embeddings():
     return embeddings
 
 def create_vector_store(chunks, embeddings):
-    """
-    Crée et persiste la base de données vectorielle ChromaDB.
-    """
-    
     # Pré-nettoyage : Supprime l'ancienne base si elle existe
     if os.path.exists(PERSIST_DIRECTORY):
         logging.warning(f"Suppression de l'ancienne base de données : {PERSIST_DIRECTORY}")
@@ -91,8 +83,6 @@ def create_vector_store(chunks, embeddings):
         
     logging.info(f"Création de la nouvelle base vectorielle à : {PERSIST_DIRECTORY}")
     
-    # Crée la base de données à partir des chunks et du modèle d'embedding
-    # 'persist_directory' lui dit où sauvegarder les fichiers sur le disque.
     vector_store = Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
