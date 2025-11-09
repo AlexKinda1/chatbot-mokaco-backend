@@ -30,7 +30,6 @@ CHUNK_OVERLAP = 200
 def load_documents_from_path(directory_path, doc_type):
     
     logging.info(f"Chargement des documents depuis : {directory_path} (Type: {doc_type})")
-    # PyPDFDirectoryLoader charge tous les PDF d'un coup
     
     loader = PyPDFDirectoryLoader(directory_path)
     documents = loader.load()
@@ -60,7 +59,6 @@ def split_documents(documents):
     return chunks
 
 
-#--- INITIALISATION DU MODÈLE D'EMBEDDING ---: Pas vraiment necessaire faire une fonction mais pour la clarté du code
 def initialize_embeddings():
     
     logging.info(f"Initialisation du modèle d'embedding : {EMBEDDING_MODEL_NAME}")
@@ -92,11 +90,11 @@ def create_vector_store(chunks, embeddings):
     logging.info("Base de données vectorielle créée et persistée avec succès !")
     return vector_store
 
-def main():
-    """
-    Fonction principale pour orchestrer l'ingestion.
-    """
-    logging.info("--- DÉMARRAGE DU SCRIPT D'INGESTION MOKACO ---")
+
+
+
+
+    logging.info("--- DÉMARRAGE DU SCRIPT D'INGESTION ---")
     
     # 1. Charger les manuels
     manual_docs = load_documents_from_path(MANUALS_PATH, doc_type="manual")
@@ -119,6 +117,3 @@ def main():
     create_vector_store(all_chunks, embeddings_model)
     
     logging.info("--- SCRIPT D'INGESTION TERMINÉ ---")
-
-if __name__ == "__main__":
-    main()
