@@ -37,7 +37,7 @@ logging.info("Documents découpés en chunks.")
 #Initialisation des embeddings
 
 
-def model_response(model):
+def define_template(model):
     
     template = """
     Tu es "MokaBot", un assistant technique expert pour les machines à café Mokaco. 
