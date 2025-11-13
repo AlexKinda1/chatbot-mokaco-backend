@@ -24,17 +24,6 @@ try:
 
 except Exception as e:
     logging.error(f"Erreur de connexion à Ollama: {e}")
-    
-
-#Chargement des documents    
-documents=load_documents_from_path(mettre le bon path)
-logging.info("Documents chargés.")
-
-#Splitting des documents
-chunks=split_documents(documents)
-logging.info("Documents découpés en chunks.")
-
-#Initialisation des embeddings
 
 
 def define_template(model):
