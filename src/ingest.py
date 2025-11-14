@@ -20,6 +20,8 @@ FAQ_PATH = os.path.join(RAW_DATA_PATH, "faq")
 # Chemin vers la base de données vectorielle (là où Chroma va stocker les données)
 PERSIST_DIRECTORY = "data/vector_db"
 
+
+
 # --- CONFIGURATION DU MODÈLE D'EMBEDDING ---
 
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
