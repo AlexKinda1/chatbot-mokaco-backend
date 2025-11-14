@@ -26,6 +26,7 @@ except Exception as e:
     logging.error(f"Erreur de connexion à Ollama: {e}")
 
 
+
 def define_template(model):
     
     template = """
