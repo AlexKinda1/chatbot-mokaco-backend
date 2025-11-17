@@ -19,16 +19,15 @@ logging.info("Démarrage")
 
 try:
     llm = ChatOllama(model="gemma3:4b", temperature=0.3)
-        
+
     logging.info("Connecté au LLM Ollama (Mistral).")
 
 except Exception as e:
     logging.error(f"Erreur de connexion à Ollama: {e}")
 
 
-
 def define_template(model):
-    
+
     template = """
     Tu es "MokaBot", un assistant technique expert pour les machines à café Mokaco. 
     Tu es amical, précis et professionnel.
@@ -48,7 +47,7 @@ def define_template(model):
     
     Réponse :
     """
-    
+
     prompt = ChatPromptTemplate.from_template(template)
 
     logging.info("Template de prompt défini.")
