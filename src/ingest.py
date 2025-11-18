@@ -88,6 +88,7 @@ def create_vector_store(chunks, embeddings):
             f"Suppression de l'ancienne base de données : {PERSIST_DIRECTORY}")
         shutil.rmtree(PERSIST_DIRECTORY)
 
+
     logging.info(
         f"Création de la nouvelle base vectorielle à : {PERSIST_DIRECTORY}")
 
