@@ -38,6 +38,7 @@ def load_documents_from_path(directory_path, doc_type):
     return documents
 
 
+
 manual_docs = load_documents_from_path(MANUALS_PATH, doc_type="manual")
 
 # 2. Charger la FAQ

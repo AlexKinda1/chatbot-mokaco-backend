@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from ingest import ingest_data
+from ingest import ing
+est_data
 
 
 @app.route('/ingest', methods=['POST'])

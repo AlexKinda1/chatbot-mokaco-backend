@@ -20,6 +20,7 @@ def qa():
 
 
 
+
     # Créer la base vectorielle
     create_vector_store(all_chunks, embeddings_model)
 
