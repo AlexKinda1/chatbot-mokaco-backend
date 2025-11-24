@@ -20,6 +20,7 @@ chunk_overlap = 200
 # Tester avec PyMuPDFLoader et UnstructuredIO
 
 
+
 def load_documents_from_path(directory_path, doc_type):
     logging.info(
         f"Chargement des documents depuis : {directory_path} (Type: {doc_type})")
