@@ -27,6 +27,7 @@ except Exception as e:
 
 
 
+
 def define_template(model):
 
     template = """
