@@ -6,6 +6,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 import logging
 
+
 RAW_DATA_PATH = "data/raw"
 
 MANUALS_PATH = os.path.join(RAW_DATA_PATH, "manuals")
