@@ -82,6 +82,7 @@ def initialize_embeddings():
 
 
 
+
 def create_vector_store(chunks, embeddings):
     # Pré-nettoyage : Supprime l'ancienne base si elle existe
     if os.path.exists(PERSIST_DIRECTORY):
