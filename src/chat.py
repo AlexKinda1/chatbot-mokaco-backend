@@ -15,6 +15,7 @@ PERSIST_DIRECTORY = "data/vector_db"
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 
+
 logging.info("Démarrage")
 
 try:
