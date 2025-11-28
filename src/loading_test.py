@@ -29,6 +29,7 @@ def load_documents_from_path(directory_path, doc_type):
     # PyPDFDirectoryLoader charge tous les PDF d'un coup
     loader = PyPDFDirectoryLoader(directory_path)
 
+
     documents = loader.load()
 
     for doc in documents:
