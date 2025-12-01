@@ -5,7 +5,7 @@ import shutil
 import pinecone
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext
-from ingest import CHUNK_SIZE, CHUNK_OVERLAP, PERSIST_DIRECTORY, EMBEDDING_MODEL_NAME
+from params import CHUNK_SIZE, CHUNK_OVERLAP, pinecone_api_key
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 import logging
@@ -61,61 +61,21 @@ def create_vector_database(nodes):
     logger.info("Création de la base de données vectorielle")
     
     try:
-        """if os.path.exists(PERSIST_DIRECTORY):
-            logger.warning(
-                f"Suppression de l'ancienne base de données : {PERSIST_DIRECTORY}"
-            )
-            shutil.rmtree(PERSIST_DIRECTORY)
-
-        vector_store = VectorStoreIndex.from_documents(
-            documents=nodes,
-            show_progress=False,
-            embed_model=embeddings,
-            persist_dir=PERSIST_DIRECTORY
-        )"""
+        pinecone.init(api_key=pinecone_api_key, environment="us-west1-gcp")
+        pinecone.create_index(
+            "mokaco_faqs", dimensiosn=384, metric="cosine", pod_type="p1"
+        )
         
+        logger.info("Index Pinecone crée avec succès.")
         
+        pinecone_index = pinecone.Index("mokaco_faqs")
+        vector_store = PineconeVectorStore(pinecone_index, HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2"))
+        storage_context = StorageContext.from_defaults(vector_store=vector_store)
+        index = VectorStoreIndex.from_documents(documents=nodes, storage_context=storage_context)
+        
+        logger.info("Base de données vectorielle créée avec succès.")
+        return index
 
-        vector_store.persist()
-        logger.info("Base de données vectorielle créée et persistée avec succès !")
-        return vector_store
-    
     except Exception as e:
         logger.error(f"Erreur lors de la création de la base de données vectorielle : {e}")
         return None
-
-
-
-
-def initialize_embeddings():
-
-    logging.info(f"Initialisation du modèle d'embedding : {EMBEDDING_MODEL_NAME}")
-
-    model_kwargs = {"device": "cpu"}
-    # Tester plus tard avec True
-    encode_kwargs = {"normalize_embeddings": False}
-
-    embeddings = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL_NAME,
-        model_kwargs=model_kwargs,
-        encode_kwargs=encode_kwargs,
-    )
-    return embeddings
-
-
-def create_vector_store(chunks, embeddings):
-    # Pré-nettoyage : Supprime l'ancienne base si elle existe
-    if os.path.exists(PERSIST_DIRECTORY):
-        logging.warning(
-            f"Suppression de l'ancienne base de données : {PERSIST_DIRECTORY}"
-        )
-        shutil.rmtree(PERSIST_DIRECTORY)
-
-    logging.info(f"Création de la nouvelle base vectorielle à : {PERSIST_DIRECTORY}")
-
-    vector_store = Chroma.from_documents(
-        documents=chunks, embedding=embeddings, persist_directory=PERSIST_DIRECTORY
-    )
-
-    logging.info("Base de données vectorielle créée et persistée avec succès !")
-    return vector_store
