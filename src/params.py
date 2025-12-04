@@ -1,40 +1,40 @@
 import os
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(asctimes)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-
-# Chemin vers les données brutes
+# --- CHEMINS DE DONNEES ---
 RAW_DATA_PATH = "data/raw"
-
 MANUALS_PATH = os.path.join(RAW_DATA_PATH, "manuals")
-
 FAQ_PATH = os.path.join(RAW_DATA_PATH, "faq")
-
 VECTOR_STORE_PATH = "data/vector_db"
-
-# Base de donnée vectorielle
 PERSIST_DIRECTORY = "data/vector_db"
 
-# Modelès de LLM
-OPEN_AI_LLM =
-MIXTRAL_LLM =
-IBM_LLM =
-LLAMA_LLM =
+# --- MODELES LLM ---
+OPEN_AI_LLM = ""  # À compléter si nécessaire
+MIXTRAL_LLM = ""
+IBM_LLM = ""
+LLAMA_LLM = ""
 
+# --- EMBEDDINGS ---
+EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
-pinecone_api_key = pcsk_K34dn_JadARxwXqsKvMQy6CBKa2sneVkqZoS6xasE2Fd9vYPbCSqdBXg9GuHVpwJDji4y
+# --- PINECONE ---
+PINECONE_INDEX_NAME = "mokaco_faqs"
+pinecone_api_key = os.getenv("PINECONE_API_KEY", "pcsk_K34dn_JadARxwXqsKvMQy6CBKa2sneVkqZoS6xasE2Fd9vYPbCSqdBXg9GuHVpwJDji4y")  # ⚠️ À déplacer dans .env
 
-
-# Paramétrage
-MAX_NEW_TOKENS = 250
-MIN_NEW_TOKEN  = 50
-TEMPERATURE = 0.3
-TOP_P = 0.9
-TOP_K = 25
+# --- PARAMETRAGE DU CHUNKING ---
 CHUNK_SIZE = 700
 CHUNK_OVERLAP = 100
 
+# --- PARAMETRAGE DU LLM ---
+MAX_NEW_TOKENS = 250
+MIN_NEW_TOKENS = 50
+TEMPERATURE = 0.3
+TOP_P = 0.9
+TOP_K = 25
+
+# --- PROMPT TEMPLATE ---
 template = """
 Tu es "MokaBot", un assistant technique expert pour les machines à café Mokaco. 
 Tu es amical, précis et professionnel.
