@@ -4,9 +4,6 @@ import logging
 from ingest import load_documents_from_path, split_documents, initialize_embeddings, create_vector_store
 
 
-
-
-
 def qa():
     # Chargement des documents
     documents = load_documents_from_path(mettre le bon path)
@@ -15,14 +12,9 @@ def qa():
     # Splitting des documents
     chunks = split_documents(documents)
     logging.info("Documents découpés en chunks.")
-
-
-
+    
     # Initialisation des embeddings
     embeddings_model = initialize_embeddings()
-
-
-
 
     # Créer la base vectorielle
     create_vector_store(all_chunks, embeddings_model)
