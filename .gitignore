@@ -34,3 +34,6 @@ __pycache__/
 .vscode/
 .idea/
 *.DS_Store
+
+#Cles API et configurations sensibles
+.env
