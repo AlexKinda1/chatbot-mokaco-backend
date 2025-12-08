@@ -103,9 +103,11 @@ def create_vector_database(nodes):
     except ValueError as e:
         logger.error(f"Erreur de configuration : {e}")
         return None
+    
     except pinecone.exceptions.PineconeException as e:
         logger.error(f"Erreur Pinecone  lors de la creationnde la base de donnée vectorielle : {e}")
         return None
+    
     except Exception as e:
         logger.error(f"Erreur lors de la création de la base de données vectorielle : {e}")
         return None
