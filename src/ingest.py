@@ -111,3 +111,38 @@ def create_vector_database(nodes):
     except Exception as e:
         logger.error(f"Erreur lors de la création de la base de données vectorielle : {e}")
         return None
+
+def ingest_pipeline(directory_path):
+    logger.info("Début de l'ingestion")
+    #Chagement des documents
+    documents = load_documents_from_path(directory_path)
+    if not documents:
+        logger.error("Aucun doucument chargé, fin de l'ingestion.")
+        return None
+    
+    #Découpage des documents
+    nodes = split_documents(documents)
+    if not nodes:
+        logger.error("Aucun chunk créé, fin de l'ingestion.")
+        return None
+    
+    #Création de la base vectorielle
+    index = create_vector_database(nodes)
+    if not index:
+        logger.error("Échec de la création de la base vectorielle, fin de l'ingestion.")
+        return None
+    
+    logger.info("Ingestion terminée avec succès.")
+    return index
+
+if __name__ == "__main__":
+    import sys
+    from pathlib import Path
+
+    direc_path = sys.argv[1] if len(sys.argv) > 1 else "data/raw"
+
+    if Path(direc_path).exists():
+        ingest_pipeline(direc_path)
+    else:
+        logger.error(f"Répertoire spécifié introuvable : {direc_path}")
+        sys.exit(1)
