@@ -8,7 +8,6 @@ venv/
 
 # --- Données ---
 # Ignorer TOUTES les données brutes (PDFs, CSVs, etc.)
-# C'est la propriété intellectuelle de Mokaco.
 data/raw/
 
 # Ignorer TOUTE la base de données vectorielle générée
@@ -37,3 +36,9 @@ __pycache__/
 
 #Cles API et configurations sensibles
 .env
+
+#Dossier à ignorer
+data/vector_db/
+logs/
+data/raw/manuals/
+data/raw/faq/
