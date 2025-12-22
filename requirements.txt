@@ -1,23 +1,25 @@
 # requirements.txt
 
 # Framework de base (exige Pydantic V2)
-ibm-watsonx-ai==1.1.2
-llama-index==0.11.8
-llama-index-core==0.11.8
-llama-index-llms-ibm==0.2.0
-llama-index-embeddings-ibm==0.2.0
-llama-index-readers-web==0.2.2
-llama-hub==0.0.79.post1
-requests==2.32.2
-gradio==4.44.1
+llama-index>=0.12.0
+llama-index-core>=0.12.0
+llama-index-llms-ibm>=0.2.0
+llama-index-embeddings-ibm>=0.2.0
+llama-index-readers-web>=0.2.2
+llama-index-vector-stores-pinecone>=0.2.0
 
 # Base vectorielle (version compatible Pydantic V2)
 chromadb>=0.5.0
 
 # Pydantic 
-pydantic==2.10.6
+pydantic>=2.7.0
 
-# Le reste
-pypdf
-python-dotenv
+#  Autres utilitaires 
+pypdf>=4.0.0
+python-dotenv>=1.0.0
+requests>=2.32.0
 
+# Outils de développement
+pytest>=8.0.0
+black>=24.0.0
+flake8>=7.0.0
