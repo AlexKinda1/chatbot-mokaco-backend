@@ -1,5 +1,8 @@
 import os
 import logging
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -20,8 +23,9 @@ LLAMA_LLM = ""
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 
 # --- PINECONE ---
-PINECONE_INDEX_NAME = "mokaco_faqs"
-pinecone_api_key = os.getenv("PINECONE_API_KEY", "pcsk_K34dn_JadARxwXqsKvMQy6CBKa2sneVkqZoS6xasE2Fd9vYPbCSqdBXg9GuHVpwJDji4y")  # ⚠️ À déplacer dans .env
+PINECONE_INDEX_NAME = "mokacodocs"
+pinecone_api_key = os.getenv("PINECONE_API_KEY")
+pinecone_environment = os.getenv("PINECONE_ENVIRONMENT")
 
 # --- PARAMETRAGE DU CHUNKING ---
 CHUNK_SIZE = 700
