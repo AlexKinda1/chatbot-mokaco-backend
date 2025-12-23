@@ -1,5 +1,6 @@
 # src/ingest.py
-import pinecone
+import dotenv
+from pinecone import Pinecone, ServerlessSpec
 import logging
 import os
 from llama_index.core.node_parser import SentenceSplitter
@@ -7,6 +8,7 @@ from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageCon
 from params import CHUNK_SIZE, CHUNK_OVERLAP, pinecone_api_key, EMBEDDING_MODEL, PINECONE_INDEX_NAME
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
+
 
 # Configuration du logging
 logging.basicConfig(
@@ -69,47 +71,53 @@ def create_vector_database(nodes):
             return None
         
         # Initialiser Pinecone
-        pinecone.init(api_key=pinecone_api_key, environment="us-west1-gcp")
+        pc = Pinecone(api_key=pinecone_api_key)
         logger.info("Pinecone initialisé.")
         
         # Vérifier et créer l'index seulement s'il n'existe pas
         index_name = PINECONE_INDEX_NAME or "mokaco_faqs"
-        existing_indexes = pinecone.list_indexes()
+        existing_indexes = pc.list_indexes().names()
         
         if index_name not in existing_indexes:
             logger.info(f"Création de l'index Pinecone '{index_name}' (dimensions=384, metric=cosine)...")
-            pinecone.create_index(
-                index_name, 
+            pc.create_index(
+                name=index_name, 
                 dimension=384,  # doit correspondre à EMBEDDING_MODEL (all-MiniLM-L6-v2 → 384)
                 metric="cosine",  # meilleur pour embeddings texte
-                pod_type="p1"
+                spec=ServerlessSpec(cloud="aws", region="us-east-1")  
             )
             logger.info(f"Index '{index_name}' créé avec succès.")
         else:
             logger.info(f"Index '{index_name}' existe déjà, réutilisation.")
         
         # Initialiser le client et le vector store
-        pinecone_index = pinecone.Index(index_name)
-        vector_store = PineconeVectorStore(pinecone_index, embeddings)
+        pinecone_index = pc.Index(index_name)
+        # Correction : PineconeVectorStore n'accepte pas embeddings en paramètre dans cette version
+        vector_store = PineconeVectorStore(pinecone_index=pinecone_index)
         storage_context = StorageContext.from_defaults(vector_store=vector_store)
         
         # Indexation des documents
         logger.info(f"Indexation de {len(nodes)} nodes...")
-        index = VectorStoreIndex.from_documents(documents=nodes, storage_context=storage_context)
+        # Essayer une approche différente pour éviter l'AssertionError
+        try:
+            index = VectorStoreIndex.from_documents(documents=nodes, storage_context=storage_context, embed_model=embeddings)
+        except AssertionError as ae:
+            logger.warning(f"AssertionError avec embed_model, tentative sans: {ae}")
+            # Fallback: créer l'index sans spécifier embed_model explicitement
+            index = VectorStoreIndex.from_documents(documents=nodes, storage_context=storage_context)
         
         logger.info("Base de données vectorielle créée et persistée avec succès.")
         return index
 
-    except ValueError as e:
-        logger.error(f"Erreur de configuration : {e}")
-        return None
-    
-    except pinecone.exceptions.PineconeException as e:
-        logger.error(f"Erreur Pinecone  lors de la creationnde la base de donnée vectorielle : {e}")
+    except ValueError as ve:
+        logger.error(f"Erreur de configuration : {ve}")
         return None
     
     except Exception as e:
         logger.error(f"Erreur lors de la création de la base de données vectorielle : {e}")
+        logger.error(f"Type d'erreur : {type(e).__name__}")
+        import traceback
+        logger.error(f"Traceback complet : {traceback.format_exc()}")
         return None
 
 def ingest_pipeline(directory_path):
@@ -134,6 +142,7 @@ def ingest_pipeline(directory_path):
     
     logger.info("Ingestion terminée avec succès.")
     return index
+
 
 if __name__ == "__main__":
     import sys
