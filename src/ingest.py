@@ -4,10 +4,10 @@ from pinecone import Pinecone, ServerlessSpec
 import logging
 import os
 from llama_index.core.node_parser import SentenceSplitter
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext, Settings
 from params import CHUNK_SIZE, CHUNK_OVERLAP, pinecone_api_key, EMBEDDING_MODEL, PINECONE_INDEX_NAME
 from llama_index.vector_stores.pinecone import PineconeVectorStore
-from langchain_huggingface import HuggingFaceEmbeddings
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 
 # Configuration du logging
@@ -17,7 +17,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Initialiser l'embedder une seule fois (global)
-embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+embed_model = HuggingFaceEmbedding(model_name=EMBEDDING_MODEL)
+
+Settings.embed_model = embed_model
 
 #FONCTIONS D'INGESTION DES FICHIERS 
 def load_documents_from_path(directory_path):
@@ -100,7 +102,7 @@ def create_vector_database(nodes):
         logger.info(f"Indexation de {len(nodes)} nodes...")
         # Essayer une approche différente pour éviter l'AssertionError
         try:
-            index = VectorStoreIndex.from_documents(documents=nodes, storage_context=storage_context, embed_model=embeddings)
+            index = VectorStoreIndex.from_documents(nodes, storage_context=storage_context, embed_model=embed_model)
         except AssertionError as ae:
             logger.warning(f"AssertionError avec embed_model, tentative sans: {ae}")
             # Fallback: créer l'index sans spécifier embed_model explicitement
