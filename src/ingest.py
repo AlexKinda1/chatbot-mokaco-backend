@@ -5,7 +5,7 @@ import logging
 import os
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core import SimpleDirectoryReader, VectorStoreIndex, StorageContext, Settings
-from params import CHUNK_SIZE, CHUNK_OVERLAP, pinecone_api_key, EMBEDDING_MODEL, PINECONE_INDEX_NAME
+from ingestion.params import CHUNK_SIZE, CHUNK_OVERLAP, pinecone_api_key, EMBEDDING_MODEL, PINECONE_INDEX_NAME
 from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
