@@ -70,8 +70,7 @@ def ingest_docs():
         try:
             index = VectorStoreIndex.from_documents(
                 documents,
-                storage_context=storage_context,
-                show_progress=True
+                storage_context=storage_context
             )
             logger.info("Index créé avec succès.")
         except Exception as e:
