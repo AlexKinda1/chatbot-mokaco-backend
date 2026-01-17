@@ -46,7 +46,7 @@ def run_search():
 
     # 5. Pose ta question ici !
     # Change cette phrase pour tester ton propre manuel
-    question = "Comment détartrer la machine ?" 
+    question = "Comment détartrer d'une machine ?" 
     
     print(f"❓ Question : {question}")
     print("🔎 Recherche dans les manuels et réflexion...")
