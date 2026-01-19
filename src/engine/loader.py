@@ -1,13 +1,13 @@
 from qdrant_client import QdrantClient
 from llama_index.core import VectorStoreIndex
 from llama_index.vector_stores.qdrant import QdrantVectorStore
-from config.config import configure_settings
+from src.config.configuration import configure_settings
 import os
 import logging
 import sys
 # On ajoute le dossier courant au chemin pour que Python trouve nos modules 'src'
 sys.path.append(".") 
-from config.params import QDRANT_URL
+from src.config.params import QDRANT_URL
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

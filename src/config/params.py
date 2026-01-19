@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
 
 # --- CHEMINS DE DONNEES ---
 RAW_DATA_PATH = "data/raw"

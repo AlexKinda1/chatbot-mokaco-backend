@@ -2,12 +2,12 @@ import sys
 sys.path.append(".") # On ajoute le dossier courant au chemin pour que Python trouve nos modules 'src'
 
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, StorageContext
-from llama_index.core.node_parser import SentenceSplitter, RecursiveCharacterTextSplitter 
+from llama_index.core.node_parser import SentenceSplitter
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
 from src.config.params import QDRANT_URL, RAW_DATA_PATH
 import os
-from config.config import configure_settings
+from src.config.configuration import configure_settings
 import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -30,10 +30,9 @@ def run_ingestion(data_dir: str = RAW_DATA_PATH, db_path: str = QDRANT_URL):
 
     # 2. Configuration du Chunking (Ingénierie des caractéristiques)
     try:
-        text_splitter = RecursiveCharacterTextSplitter(
+        text_splitter = SentenceSplitter(
             chunk_size=512,    # Taille idéale pour text-embedding-004
-            chunk_overlap=50,  # Marge de sécurité pour ne pas couper les phrases
-            separators=["\n\n", "\n", " ", ""]
+            chunk_overlap=50 # Marge de sécurité pour ne pas couper les phrases
         )
     except Exception as e:
         logger.error(f"Erreur lors de la configuration du text_splitter : {e}")

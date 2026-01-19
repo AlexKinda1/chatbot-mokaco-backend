@@ -42,3 +42,4 @@ data/vector_db/
 logs/
 data/raw/manuals/
 data/raw/faq/
+qdrant_data/
