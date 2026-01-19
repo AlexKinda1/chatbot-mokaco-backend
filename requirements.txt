@@ -4,6 +4,7 @@ llama-index-core
 # Les nouvelles librairies Google (celles qui marchent)
 llama-index-llms-google-genai
 llama-index-embeddings-google-genai
+llama-index-postprocessor-sbert-rerank
 
 # La base de données
 llama-index-vector-stores-qdrant

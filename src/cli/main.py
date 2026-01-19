@@ -10,12 +10,14 @@ logger = logging.getLogger(__name__)
 
 def main():
     print("=== MOKACO AI CLI ===")
-    
+    """""" 
+    """"
     try:
        run_ingestion()
        logger.info("Ingestion terminée avec succès.")
     except Exception as e:
        logger.error(f"Erreur lors de l'ingestion : {e}")
+    """
         
     try:
         engine = get_query_engine()
