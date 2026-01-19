@@ -7,7 +7,7 @@ from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding 
 from llama_index.llms.google_genai import GoogleGenAI
 from qdrant_client import QdrantClient
-from params import EMBEDDING_MODEL, RAW_DATA_PATH 
+from config.params import EMBEDDING_MODEL, RAW_DATA_PATH 
 
 # Configuration du logging
 logging.basicConfig(
