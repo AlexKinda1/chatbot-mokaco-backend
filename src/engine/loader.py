@@ -2,6 +2,8 @@ from qdrant_client import QdrantClient
 from llama_index.core import VectorStoreIndex
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.postprocessor.sbert_rerank import SentenceTransformerRerank
+from llama_index.core.llms import ChatMessage
+from llama_index.core.memory import Memory
 from src.config.configuration import configure_settings
 import os
 import logging
@@ -19,7 +21,7 @@ sys.path.append(".")
 
 configure_settings()
 
-def get_query_engine(db_path: str = QDRANT_URL):
+def get_chat_engine(db_path: str = QDRANT_URL):
     """
     Charge l'index existant et retourne un moteur de requête prêt à l'emploi.
     """
@@ -45,10 +47,32 @@ def get_query_engine(db_path: str = QDRANT_URL):
     except Exception as e:
         logger.error(f"Erreur lors de la configuration du post-processeur de re-ranking : {e}")
         
-    engine = index.as_query_engine(
-        similarity_top_k=10, 
-        node_postprocessors=[rerank_postprocessor]
-        #system_prompt=MOKACO_SYSTEM_PROMPT
+    #Configuration de la memoire de conversation
+    memory = Memory.from_defaults(
+        session_id="my_session",
+        token_limit=70000,
+        chat_history_token_ratio=0.7,
+        token_flush_size=3000
     )
     
-    return engine
+    logger.info("Mémoire de conversation configurée avec succès.")
+        
+    chat_engine = index.as_chat_engine(
+        chat_mode="condense_plus_context", # Mode intelligent : reformule la question
+        memory=memory,
+        #system_prompt=MOKACO_SYSTEM_PROMPT,
+        similarity_top_k=10,
+        node_postprocessors=[rerank_postprocessor], # On garde notre super Reranker
+        verbose=True # Affiche dans la console comment il reformule la question (utile pour debug)       
+    )
+
+    #Pensez au context_prompt ou au system_prompt plus tard
+    """context_prompt=(
+        "You are a chatbot, able to have normal interactions, as well as talk"
+        " about an essay discussing Paul Grahams life."
+        "Here are the relevant documents for the context:\n"
+        "{context_str}"
+        "\nInstruction: Use the previous chat history, or the context above, to interact and help the user."
+    )"""
+
+    return chat_engine
