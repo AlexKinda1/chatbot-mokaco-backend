@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOKACO - Support Client</title>
+    <style>
+        /* --- 1. LE STYLE (CSS) --- */
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        /* La fausse page du site */
+        .website-mockup { text-align: center; color: #333; }
+        
+        /* Le bouton flottant */
+        .chat-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background-color: #2c3e50; color: white;
+            border: none; padding: 15px 20px; border-radius: 30px;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            font-size: 16px; font-weight: bold; transition: transform 0.2s;
+        }
+        .chat-btn:hover { transform: scale(1.05); }
+
+        /* La fenêtre de chat */
+        .chat-window {
+            position: fixed; bottom: 80px; right: 20px;
+            width: 350px; height: 500px;
+            background: white; border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: none; /* Caché par défaut */
+            flex-direction: column; overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .chat-header {
+            background-color: #2c3e50; color: white; padding: 15px;
+            font-weight: bold; display: flex; justify-content: space-between;
+        }
+        .close-btn { cursor: pointer; font-size: 20px; }
+
+        .chat-messages {
+            flex: 1; padding: 15px; overflow-y: auto; background-color: #fff;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        /* Bulles de message */
+        .message { max-width: 80%; padding: 10px; border-radius: 10px; font-size: 14px; line-height: 1.4; }
+        .user { align-self: flex-end; background-color: #3498db; color: white; border-bottom-right-radius: 0; }
+        .bot { align-self: flex-start; background-color: #ecf0f1; color: #2c3e50; border-bottom-left-radius: 0; }
+        
+        /* Affichage des sources */
+        .sources { font-size: 11px; color: #7f8c8d; margin-top: 5px; padding-top: 5px; border-top: 1px solid #bdc3c7; }
+
+        .chat-input-area {
+            padding: 10px; border-top: 1px solid #eee; display: flex; gap: 10px; background: #fafafa;
+        }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 20px; outline: none; }
+        button.send { background: #27ae60; color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; }
+        button.send:disabled { background: #ccc; }
+        
+        /* Animation de chargement */
+        .typing { font-style: italic; color: #aaa; font-size: 12px; margin-left: 10px; display: none;}
+    </style>
+</head>
+<body>
+
+    <div class="website-mockup">
+        <h1>Bienvenue chez MOKACO</h1>
+        <p>Le spécialiste des machines à café professionnelles.</p>
+    </div>
+
+    <button class="chat-btn" onclick="toggleChat()">💬 Aide Technique</button>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span>Assistant Expert MOKACO</span>
+            <span class="close-btn" onclick="toggleChat()">×</span>
+        </div>
+        <div class="chat-messages" id="messages">
+            <div class="message bot">Bonjour ! Je suis l'expert technique IA. Un problème avec votre machine ?</div>
+        </div>
+        <div class="typing" id="typingIndicator">L'expert réfléchit...</div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="Posez votre question..." onkeypress="handleKeyPress(event)">
+            <button class="send" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        /* --- 2. LA LOGIQUE (JS) --- */
+        const API_URL = "http://127.0.0.1:8000/chat";
+
+        function toggleChat() {
+            const w = document.getElementById('chatWindow');
+            w.style.display = w.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // 1. Afficher le message utilisateur
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // 2. Afficher "L'expert réfléchit..."
+            const typing = document.getElementById('typingIndicator');
+            typing.style.display = 'block';
+
+            try {
+                // 3. Envoyer à ton API Python
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                // 4. Formater la réponse (Markdown simple -> HTML)
+                // On remplace les sauts de ligne par des <br> pour l'affichage
+                let formattedText = data.response.replace(/\n/g, '<br>');
+                
+                // Ajouter les sources si elles existent
+                if (data.sources && data.sources.length > 0) {
+                    const topSource = data.sources[0];
+                    formattedText += `<div class="sources">Source : ${topSource.file_name} (Confiance: ${(topSource.score * 100).toFixed(1)}%)</div>`;
+                }
+
+                addMessage(formattedText, 'bot', true);
+
+            } catch (error) {
+                addMessage("Erreur de connexion au serveur. Vérifiez que l'API tourne.", 'bot');
+                console.error(error);
+            } finally {
+                typing.style.display = 'none';
+            }
+        }
+
+        function addMessage(text, sender, isHtml = false) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            if (isHtml) div.innerHTML = text;
+            else div.textContent = text;
+            
+            const container = document.getElementById('messages');
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+</body>
+</html>
