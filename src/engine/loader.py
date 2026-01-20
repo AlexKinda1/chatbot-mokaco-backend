@@ -13,7 +13,7 @@ from src.config.configuration import configure_settings
 import os
 import logging 
 from src.config.params import QDRANT_URL, QDRANT_COLLECTION_NAME, SBERT_RERANKING_MODEL, TOP_N_RERANK, MEMORY_TOKEN_LIMIT, CHAT_HISTORY_TOKEN_RATIO, MEMORY_TOKEN_FLUSH_SIZE, SIMILARITY_TOP_K, CHAT_MODE
-from src.config.prompts import PROMPT_TEMPLATE
+from src.config.prompts import SYSTEM_PROMPT_TEMPLATE
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -63,7 +63,7 @@ def get_chat_engine(db_path: str = QDRANT_URL):
     chat_engine = index.as_chat_engine(
         chat_mode=CHAT_MODE, # Mode intelligent : reformule la question
         memory=memory,
-        #system_prompt=MOKACO_SYSTEM_PROMPT,
+        system_prompt=SYSTEM_PROMPT_TEMPLATE,
         similarity_top_k=SIMILARITY_TOP_K,
         node_postprocessors=[rerank_postprocessor], # On garde notre super Reranker
         verbose=True # Affiche dans la console comment il reformule la question (utile pour debug)       
