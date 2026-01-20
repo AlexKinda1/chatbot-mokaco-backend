@@ -4,14 +4,15 @@ from dotenv import load_dotenv
 from llama_index.core import Settings
 from llama_index.embeddings.google_genai import GoogleGenAIEmbedding 
 from llama_index.llms.google_genai import GoogleGenAI
-from src.config.params import TEMPERATURE
+from src.config.params import TEMPERATURE, GEMINI_LLM, GEMINI_EMBEDDING
 
+# Configuration du logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 print("Configuration des modèles Gemini")
 
-# 1. Charger les variables d'environnement une bonne fois pour toutes
+# Charger les variables d'environnement une bonne fois pour toutes, pour eviter les répétitions
 load_dotenv()
 
 def configure_settings():
@@ -25,17 +26,17 @@ def configure_settings():
     #Configuration du modèle LLM (Le Générateur de texte)
     try:
         Settings.llm = GoogleGenAI(
-        model_name="models/gemini-2.5-flash",
+        model_name=GEMINI_LLM, #Remplacer par le modèle Gemini souhaité (si modele de openAI, utiliser OpenAILLM: voir doc)
         temperature=TEMPERATURE # Faible température pour la précision technique
     )
     except Exception as e:
         logger.error(f"Impossible de charger le LLM Gemini: {e}")   
-        
+          
 
-    # Configuration du modèle d'embedding (Le Traducteur sémantique)BENEBO?OBEN
+    # Configuration du modèle d'embedding (Le Traducteur sémantique)
     try:
         Settings.embed_model = GoogleGenAIEmbedding(
-        model_name="models/text-embedding-004"
+        model_name=GEMINI_EMBEDDING #Remplacer par le modèle Gemini souhaité (si modele de openAI, utiliser OpenAIEmbedding: Voir doc)
     )
     except Exception as e:
         logger.error(f"Impossible de charger l'embedding Gemini: {e}")
